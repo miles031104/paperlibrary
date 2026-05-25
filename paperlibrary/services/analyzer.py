@@ -1,5 +1,6 @@
 import asyncio
 import json
+import re
 from datetime import UTC, datetime
 
 from sqlalchemy.orm import Session, sessionmaker
@@ -39,6 +40,14 @@ Return exactly this JSON:
 }}"""
 
 
+def _clean_json(raw: str) -> str:
+    """Strip markdown code fences that some models add despite instructions."""
+    raw = raw.strip()
+    raw = re.sub(r"^```(?:json)?\s*", "", raw)
+    raw = re.sub(r"\s*```$", "", raw)
+    return raw.strip()
+
+
 class Analyzer:
     def __init__(self, settings: Settings, session_factory: sessionmaker):
         self.settings = settings
@@ -58,7 +67,7 @@ class Analyzer:
             system=SYSTEM_PROMPT,
             messages=[{"role": "user", "content": _user_prompt(filename, text)}],
         )
-        return json.loads(msg.content[0].text)
+        return json.loads(_clean_json(msg.content[0].text))
 
     async def _call_openai_compatible(self, filename: str, text: str) -> dict:
         import httpx
@@ -75,7 +84,7 @@ class Analyzer:
                 },
             )
             resp.raise_for_status()
-            return json.loads(resp.json()["choices"][0]["message"]["content"])
+            return json.loads(_clean_json(resp.json()["choices"][0]["message"]["content"]))
 
     async def analyze(self, paper_id: str, filename: str, file_path: str) -> None:
         with self.session_factory() as session:

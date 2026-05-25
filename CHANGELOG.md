@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.1.1] — 2026-05-26
+
+### Fixed
+
+- Strip markdown code fences (` ```json ... ``` `) from LLM responses before JSON parsing — some OpenAI-compatible providers (e.g. MiniMax) wrap JSON in fences despite prompt instructions, causing `"LLM returned invalid JSON"` errors. Applies to both `anthropic` and `openai-compatible` paths.
+
 ## [0.1.0] — 2026-05-25
 
 ### Added
