@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>paperlibrary</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <span class="brand">📚 paperlibrary</span>
+    <div class="topbar-right">
+      <label class="upload-btn">
+        Upload PDF
+        <input type="file" id="file-input" accept=".pdf" hidden />
+      </label>
+      <input type="search" id="search-input" class="search-box" placeholder="Search title or summary…" />
+    </div>
+  </header>
+
+  <div class="filter-bar">
+    <select id="filter-topic"><option value="">All topics</option></select>
+    <select id="filter-year"><option value="">All years</option></select>
+    <select id="filter-method"><option value="">All methods</option></select>
+    <select id="filter-status">
+      <option value="">All status</option>
+      <option value="done">Done</option>
+      <option value="pending">Pending</option>
+      <option value="running">Analyzing</option>
+      <option value="failed">Failed</option>
+    </select>
+  </div>
+
+  <main id="paper-grid" class="paper-grid"></main>
+
+  <div id="modal-overlay" class="modal-overlay hidden">
+    <div class="modal" id="modal">
+      <button class="modal-close" id="modal-close">✕</button>
+      <div id="modal-content"></div>
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
