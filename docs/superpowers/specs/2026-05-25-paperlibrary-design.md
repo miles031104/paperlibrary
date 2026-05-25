@@ -74,7 +74,7 @@ paperlibrary/
 
 ## 3. Data Model
 
-Single `papers` table in SQLite, managed via SQLAlchemy Core (no ORM session complexity).
+Single `papers` table in SQLite, managed via SQLAlchemy ORM.
 
 ```sql
 CREATE TABLE papers (
