@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2] — 2026-05-26
+
+### Fixed
+
+- Strip `<think>...</think>` reasoning blocks emitted by reasoning models (MiniMax-M2.7, DeepSeek-R1, etc.) before JSON parsing — these blocks precede the actual JSON output and were causing `"LLM returned invalid JSON"` errors.
+- Added fallback: advance to first `{` in case any other preamble text remains after stripping fences and think blocks.
+
 ## [0.1.1] — 2026-05-26
 
 ### Fixed

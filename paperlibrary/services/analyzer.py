@@ -41,10 +41,22 @@ Return exactly this JSON:
 
 
 def _clean_json(raw: str) -> str:
-    """Strip markdown code fences that some models add despite instructions."""
+    """Strip model-added wrappers before JSON parsing.
+
+    Handles:
+    - Markdown code fences (```json ... ```)
+    - Reasoning model <think>...</think> blocks (e.g. MiniMax-M2.7, DeepSeek-R1)
+    """
     raw = raw.strip()
+    # Remove <think>...</think> reasoning blocks (reasoning models emit these)
+    raw = re.sub(r"<think>.*?</think>", "", raw, flags=re.DOTALL).strip()
+    # Remove markdown code fences
     raw = re.sub(r"^```(?:json)?\s*", "", raw)
     raw = re.sub(r"\s*```$", "", raw)
+    # Advance to first { in case there is any remaining preamble text
+    brace = raw.find("{")
+    if brace > 0:
+        raw = raw[brace:]
     return raw.strip()
 
 
