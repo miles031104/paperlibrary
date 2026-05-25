@@ -238,6 +238,7 @@ function renderTableRow(p) {
     <td class="chip-list">${chips}</td>
     <td class="table-actions">
       <button class="btn btn--primary" data-detail="${p.paper_id}">Details</button>
+      <a class="btn btn--subtle" href="/api/papers/${p.paper_id}/pdf" target="_blank">PDF</a>
       <button class="btn btn--danger"  data-delete="${p.paper_id}">Delete</button>
     </td>
   </tr>`;
@@ -292,6 +293,7 @@ function renderCard(p) {
     <div class="chip-list">${chips}</div>
     <div class="card-actions">
       <button class="btn btn--primary" data-detail="${p.paper_id}">Details</button>
+      <a class="btn btn--subtle" href="/api/papers/${p.paper_id}/pdf" target="_blank">View PDF</a>
       <button class="btn btn--danger"  data-delete="${p.paper_id}">Delete</button>
     </div>
   </div>`;
@@ -314,6 +316,7 @@ function openModal(paperId) {
       ${p.venue ? `· ${esc(p.venue)}` : ""}
       ${p.methodology ? `· <em>${esc(p.methodology)}</em>` : ""}
     </div>
+    <a class="btn btn--subtle" href="/api/papers/${p.paper_id}/pdf" target="_blank" style="display:inline-block;margin-bottom:0.75rem">View PDF ↗</a>
     <div class="chip-list">${allChips}</div>
     ${p.abstract ? `
     <div class="section">

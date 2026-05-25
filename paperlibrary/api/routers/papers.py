@@ -3,6 +3,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, UploadFile, File
+from fastapi.responses import FileResponse
 from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session
 
@@ -96,6 +97,20 @@ def delete_paper(paper_id: str, db: Session = Depends(get_db)) -> None:
     Path(paper.file_path).unlink(missing_ok=True)
     db.delete(paper)
     db.commit()
+
+
+@router.get("/{paper_id}/pdf")
+def serve_pdf(paper_id: str, db: Session = Depends(get_db)) -> FileResponse:
+    paper = db.get(Paper, paper_id)
+    if paper is None:
+        raise HTTPException(status_code=404, detail="Paper not found.")
+    if not Path(paper.file_path).exists():
+        raise HTTPException(status_code=404, detail="PDF file not found on disk.")
+    return FileResponse(
+        path=paper.file_path,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f'inline; filename="{paper.filename}"'},
+    )
 
 
 @router.post("/{paper_id}/analyze", status_code=202)

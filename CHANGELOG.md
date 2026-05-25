@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.4] — 2026-05-26
+
+### Added
+
+- `GET /api/papers/{id}/pdf` endpoint — serves the stored PDF inline so browsers can render it natively
+- **View PDF** button in card view (done state), table view, and the detail modal — all open the PDF in a new browser tab
+
 ## [0.1.3] — 2026-05-26
 
 ### Added
