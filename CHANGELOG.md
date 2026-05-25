@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.1.3] — 2026-05-26
+
+### Added
+
+- View toggle in filter bar: switch between **card grid** (⊞) and **table** (☰) view
+- Table view columns: Status · Title (clickable → Detail modal) · Authors · Year · Venue · Method · Topics · Actions
+- Pending/running rows show skeleton placeholder; failed rows show error message inline
+- Topic chips in table view still trigger topic filter on click
+
 ## [0.1.2] — 2026-05-26
 
 ### Fixed

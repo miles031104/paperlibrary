@@ -3,6 +3,7 @@ const API = "/api/papers";
 // ── State ──────────────────────────────────────────────────────────────────
 let papers = [];
 let activeFilters = { topic: "", year: "", method: "", status: "", q: "" };
+let viewMode = "card"; // "card" | "table"
 const pollingIds = new Map(); // paper_id → intervalId
 
 // ── Bootstrap ──────────────────────────────────────────────────────────────
@@ -34,7 +35,17 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("modal-overlay").addEventListener("click", (e) => {
     if (e.target === document.getElementById("modal-overlay")) closeModal();
   });
+
+  document.getElementById("btn-card").addEventListener("click", () => setViewMode("card"));
+  document.getElementById("btn-table").addEventListener("click", () => setViewMode("table"));
 });
+
+function setViewMode(mode) {
+  viewMode = mode;
+  document.getElementById("btn-card").classList.toggle("view-btn--active", mode === "card");
+  document.getElementById("btn-table").classList.toggle("view-btn--active", mode === "table");
+  renderGrid();
+}
 
 // ── Data fetching ──────────────────────────────────────────────────────────
 async function loadPapers() {
@@ -135,32 +146,101 @@ function filteredPapers() {
 
 // ── Rendering ──────────────────────────────────────────────────────────────
 function renderGrid() {
-  const grid = document.getElementById("paper-grid");
+  const container = document.getElementById("paper-grid");
   const visible = filteredPapers();
 
   if (visible.length === 0) {
-    grid.innerHTML = `<p style="color:#6b7280;padding:2rem 0">No papers match the current filters.</p>`;
+    container.className = viewMode === "card" ? "paper-grid" : "paper-table-wrap";
+    container.innerHTML = `<p style="color:#6b7280;padding:2rem 0">No papers match the current filters.</p>`;
     return;
   }
 
-  grid.innerHTML = visible.map(renderCard).join("");
+  if (viewMode === "card") {
+    container.className = "paper-grid";
+    container.innerHTML = visible.map(renderCard).join("");
+  } else {
+    container.className = "paper-table-wrap";
+    container.innerHTML = renderTableHTML(visible);
+  }
 
-  grid.querySelectorAll("[data-detail]").forEach((btn) => {
-    btn.addEventListener("click", () => openModal(btn.dataset.detail));
+  container.querySelectorAll("[data-detail]").forEach((el) => {
+    el.addEventListener("click", () => openModal(el.dataset.detail));
   });
-  grid.querySelectorAll("[data-delete]").forEach((btn) => {
+  container.querySelectorAll("[data-delete]").forEach((btn) => {
     btn.addEventListener("click", () => deletePaper(btn.dataset.delete));
   });
-  grid.querySelectorAll("[data-reanalyze]").forEach((btn) => {
+  container.querySelectorAll("[data-reanalyze]").forEach((btn) => {
     btn.addEventListener("click", () => reanalyze(btn.dataset.reanalyze));
   });
-  grid.querySelectorAll("[data-filter-topic]").forEach((chip) => {
+  container.querySelectorAll("[data-filter-topic]").forEach((chip) => {
     chip.addEventListener("click", () => {
       activeFilters.topic = chip.dataset.filterTopic;
       document.getElementById("filter-topic").value = chip.dataset.filterTopic;
       renderGrid();
     });
   });
+}
+
+function renderTableHTML(visible) {
+  return `
+  <table class="paper-table">
+    <thead><tr>
+      <th>Status</th>
+      <th>Title</th>
+      <th>Authors</th>
+      <th>Year</th>
+      <th>Venue</th>
+      <th>Method</th>
+      <th>Topics</th>
+      <th>Actions</th>
+    </tr></thead>
+    <tbody>${visible.map(renderTableRow).join("")}</tbody>
+  </table>`;
+}
+
+function renderTableRow(p) {
+  const status = p.analysis_status;
+  const title = p.title || p.filename;
+  const authorList = p.authors || [];
+  const authors = authorList.slice(0, 2).join("; ") + (authorList.length > 2 ? " et al." : "");
+  const chips = (p.topics || []).slice(0, 3)
+    .map((t) => `<span class="chip" data-filter-topic="${esc(t)}">${esc(t)}</span>`)
+    .join("");
+
+  if (status === "pending" || status === "running") {
+    return `<tr>
+      <td><span class="badge badge--${status}">${status === "running" ? "Analyzing…" : "Pending"}</span></td>
+      <td class="table-title">${esc(p.filename)}</td>
+      <td colspan="5"><div class="skeleton" style="height:0.75em;width:55%"></div></td>
+      <td></td>
+    </tr>`;
+  }
+
+  if (status === "failed") {
+    return `<tr>
+      <td><span class="badge badge--failed">Failed</span></td>
+      <td class="table-title">${esc(p.filename)}</td>
+      <td colspan="5" style="color:#991b1b">${esc(p.error_message || "Analysis failed")}</td>
+      <td class="table-actions">
+        <button class="btn btn--subtle" data-reanalyze="${p.paper_id}">Retry</button>
+        <button class="btn btn--danger"  data-delete="${p.paper_id}">Delete</button>
+      </td>
+    </tr>`;
+  }
+
+  return `<tr>
+    <td><span class="badge badge--done">Done</span></td>
+    <td class="table-title" data-detail="${p.paper_id}">${esc(title)}</td>
+    <td class="table-meta">${esc(authors)}</td>
+    <td class="table-meta">${p.year || ""}</td>
+    <td class="table-venue" title="${esc(p.venue || "")}">${esc(p.venue || "")}</td>
+    <td class="table-meta">${esc(p.methodology || "")}</td>
+    <td class="chip-list">${chips}</td>
+    <td class="table-actions">
+      <button class="btn btn--primary" data-detail="${p.paper_id}">Details</button>
+      <button class="btn btn--danger"  data-delete="${p.paper_id}">Delete</button>
+    </td>
+  </tr>`;
 }
 
 function renderCard(p) {
