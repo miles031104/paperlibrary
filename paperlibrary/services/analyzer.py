@@ -34,6 +34,7 @@ Return exactly this JSON:
   "topics": ["Tag1", "Tag2", "Tag3"],
   "keywords": ["kw1", "kw2"],
   "one_line_summary": "One sentence capturing the core idea (<=50 words)",
+  "ai_summary": "~150-word synthesis: (1) core problem and thesis, (2) key method or approach, (3) main results or findings with numbers if available, (4) notable limitations or open questions",
   "key_contributions": ["Contribution 1", "Contribution 2"],
   "methodology": "Empirical | Theoretical | Survey | System | Position",
   "citations": ["Author et al., Year. Title. Venue."]
@@ -136,6 +137,7 @@ class Analyzer:
             paper.topics = json.dumps(result.get("topics") or [])
             paper.keywords = json.dumps(result.get("keywords") or [])
             paper.one_line_summary = result.get("one_line_summary")
+            paper.ai_summary = result.get("ai_summary")
             paper.key_contributions = json.dumps(result.get("key_contributions") or [])
             paper.methodology = result.get("methodology")
             paper.citations = json.dumps(result.get("citations") or [])

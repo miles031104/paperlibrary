@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.5] — 2026-05-26
+
+### Added
+
+- `ai_summary` field: AI-generated ~150-word structured synthesis covering (1) core problem & thesis, (2) method/approach, (3) key findings with numbers, (4) limitations/open questions — more useful for citation checking than the author-written abstract
+- `ai_summary` is shown prominently at the top of the detail modal; original abstract collapsed under "Original Abstract" toggle
+- Auto database migration in `init_db` — existing `papers.db` files gain the new column automatically on next startup, no manual reset needed
+
 ## [0.1.4] — 2026-05-26
 
 ### Added

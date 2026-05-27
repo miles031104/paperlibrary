@@ -26,6 +26,7 @@ class Paper(Base):
     topics: Mapped[str | None] = mapped_column(String, nullable=True)          # JSON array
     keywords: Mapped[str | None] = mapped_column(String, nullable=True)        # JSON array
     one_line_summary: Mapped[str | None] = mapped_column(String, nullable=True)
+    ai_summary: Mapped[str | None] = mapped_column(String, nullable=True)
     key_contributions: Mapped[str | None] = mapped_column(String, nullable=True)  # JSON array
     methodology: Mapped[str | None] = mapped_column(String, nullable=True)
     citations: Mapped[str | None] = mapped_column(String, nullable=True)       # JSON array

@@ -24,6 +24,7 @@ class PaperResponse(BaseModel):
     topics: list[str] = []
     keywords: list[str] = []
     one_line_summary: str | None = None
+    ai_summary: str | None = None
     key_contributions: list[str] = []
     methodology: str | None = None
     citations: list[str] = []

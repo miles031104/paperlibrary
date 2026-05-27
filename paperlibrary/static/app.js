@@ -318,15 +318,22 @@ function openModal(paperId) {
     </div>
     <a class="btn btn--subtle" href="/api/papers/${p.paper_id}/pdf" target="_blank" style="display:inline-block;margin-bottom:0.75rem">View PDF ↗</a>
     <div class="chip-list">${allChips}</div>
-    ${p.abstract ? `
+    ${p.ai_summary ? `
     <div class="section">
-      <div class="section-title">Abstract</div>
-      <p class="abstract-text">${esc(p.abstract)}</p>
+      <div class="section-title">AI Summary</div>
+      <p class="abstract-text">${esc(p.ai_summary)}</p>
     </div>` : ""}
     ${contributions ? `
     <div class="section">
       <div class="section-title">Key Contributions</div>
       <ul>${contributions}</ul>
+    </div>` : ""}
+    ${p.abstract ? `
+    <div class="section">
+      <details>
+        <summary>Original Abstract</summary>
+        <p class="abstract-text" style="margin-top:0.5rem">${esc(p.abstract)}</p>
+      </details>
     </div>` : ""}
     ${citationList ? `
     <div class="section">
