@@ -26,7 +26,7 @@ def _user_prompt(filename: str, text: str) -> str:
 
 Return exactly this JSON:
 {{
-  "title": "Full paper title",
+  "title": "Exact title as printed at the top of the paper — copy verbatim, do not rephrase or capitalise differently",
   "authors": ["Last, First"],
   "year": 2024,
   "venue": "Conference or Journal, Year",
