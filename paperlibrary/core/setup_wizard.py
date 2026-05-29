@@ -7,6 +7,7 @@ starts skip the wizard entirely.
 
 from __future__ import annotations
 
+import getpass
 from pathlib import Path
 
 # (key, display name, llm_provider value, default model, default base_url)
@@ -70,7 +71,11 @@ def run_wizard(env_path: Path) -> None:
 
     # ── Step 2: API key ───────────────────────────────────────
     print("Step 2/3  Enter your API key\n")
-    api_key = _ask("  API key")
+    api_key = ""
+    while not api_key:
+        api_key = getpass.getpass("  API key (hidden): ").strip()
+        if not api_key:
+            print("  (required — please enter a value)")
     print()
 
     # ── Step 3: model + (optional) base URL ──────────────────
