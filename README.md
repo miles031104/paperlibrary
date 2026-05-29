@@ -75,34 +75,56 @@ flowchart TD
 ```bash
 git clone https://github.com/miles031104/paperlibrary
 cd paperlibrary
-pip install -r requirements.txt
-cp .env.example .env
 ```
 
-### Configure
+### Run (one click)
 
-Edit `.env`:
+**Windows** — double-click `start.bat`
+
+**Mac / Linux:**
+```bash
+bash start.sh
+```
+
+The script installs dependencies automatically on first run.  
+The app then opens **http://localhost:8000** in your browser automatically.
+
+### First-time setup wizard
+
+If no API key is configured, a guided wizard runs in the terminal:
+
+```
+========================================================
+  Welcome to paperlibrary — first-time setup
+========================================================
+
+Step 1/3  Choose your LLM provider
+
+  1. Anthropic (Claude)
+  2. OpenAI
+  3. DeepSeek
+  4. MiniMax
+  5. Other (OpenAI-compatible)
+
+  Enter number [1]:
+```
+
+Enter your provider, API key, and model — the wizard saves everything to `.env` and starts the app. Subsequent runs skip the wizard entirely.
+
+### Manual configuration (alternative)
+
+If you prefer to configure without the wizard, copy `.env.example` to `.env` and edit it:
 
 ```ini
-# Anthropic
 PAPERLIBRARY_LLM_PROVIDER=anthropic
 PAPERLIBRARY_LLM_API_KEY=sk-ant-...
 PAPERLIBRARY_LLM_MODEL=claude-haiku-4-5
-
-# — or — OpenAI-compatible (OpenAI, DeepSeek, MiniMax, …)
-PAPERLIBRARY_LLM_PROVIDER=openai-compatible
-PAPERLIBRARY_LLM_API_KEY=sk-...
-PAPERLIBRARY_LLM_MODEL=gpt-4o-mini
-PAPERLIBRARY_LLM_BASE_URL=https://api.openai.com/v1
 ```
 
-### Run
-
+Then start with:
 ```bash
 python -m paperlibrary
 ```
-
-Open **http://localhost:8000** in your browser.
 
 ---
 
@@ -200,3 +222,4 @@ The project was built incrementally with one commit per concern. Key checkpoints
 | `feat: open PDF in browser` | Added `GET /api/papers/{id}/pdf` with `Content-Disposition: inline` so the browser renders the PDF natively without downloading it. |
 | `feat: add AI-generated paper summary` | Replaced the author-written abstract as the primary summary with a structured AI synthesis covering core problem, method, results, and limitations — more actionable for citation checking. Auto-migrates existing databases via `ALTER TABLE`. |
 | `fix(prompt): require verbatim title extraction` | Tightened the prompt to instruct the LLM to copy the title exactly as printed, preventing capitalisation or rephrasing drift. |
+| `feat: first-run setup wizard + one-click start scripts` | Added an interactive terminal wizard that runs when `.env` is missing, guiding users through provider / key / model selection. `start.bat` and `start.sh` auto-install deps and launch the app with one double-click. Browser opens automatically. |
