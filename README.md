@@ -173,8 +173,8 @@ Failed papers show an error message. Click **Retry** to re-trigger analysis, or 
 | `PAPERLIBRARY_LLM_BASE_URL` | — | Base URL (openai-compatible only) |
 | `PAPERLIBRARY_STORAGE_PATH` | `./storage` | Where to store DB and uploaded PDFs |
 | `PAPERLIBRARY_PORT` | `8000` | Server port |
-| `PAPERLIBRARY_EXTRACT_PAGES` | `6` | Pages read per PDF |
-| `PAPERLIBRARY_MAX_TEXT_CHARS` | `6000` | Max characters sent to LLM |
+| `PAPERLIBRARY_EXTRACT_PAGES` | `25` | Pages read per PDF |
+| `PAPERLIBRARY_MAX_TEXT_CHARS` | `60000` | Max characters sent to LLM (~20-page paper) |
 
 ---
 

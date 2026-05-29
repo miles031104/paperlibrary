@@ -11,8 +11,8 @@ class Settings(BaseSettings):
     llm_base_url: str | None = None
 
     storage_path: Path = Path("./storage")
-    max_text_chars: int = 6000
-    extract_pages: int = 6
+    max_text_chars: int = 60000
+    extract_pages: int = 25
     port: int = 8000
 
     model_config = SettingsConfigDict(
