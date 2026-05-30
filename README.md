@@ -41,6 +41,7 @@ flowchart TD
     User(["👤 User"])
 
     subgraph Frontend["🌐 Frontend · Browser (HTML · CSS · Vanilla JS)"]
+        direction LR
         F1["Upload PDF"]
         F2["Browse · Filter · Search\nCard view  /  Table view"]
         F3["Detail Modal\nAI Summary · Contributions · Citations"]
