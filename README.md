@@ -22,7 +22,7 @@ paperlibrary is a **reactive intelligent agent** built around a perception → d
 
 | Stage | What happens |
 |---|---|
-| **Perceive** | User uploads a PDF. PyMuPDF extracts up to 6 pages of text (abstract-first ordering) and truncates to 6 000 characters. |
+| **Perceive** | User uploads a PDF. PyMuPDF extracts up to 25 pages of text (abstract-first ordering) and truncates to 60 000 characters, covering a full 20-page paper. |
 | **Decide** | The LLM receives the extracted text and decides: what is the exact title? who are the authors? what methodology does it use? what are the key contributions and limitations? It outputs structured JSON. |
 | **Act** | The agent writes the structured metadata to SQLite, marks the paper `done`, and the frontend reflects the update automatically (3-second polling). |
 
