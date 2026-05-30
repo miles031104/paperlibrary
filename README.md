@@ -38,21 +38,55 @@ paperlibrary is a **reactive intelligent agent** built around a perception → d
 
 ```mermaid
 flowchart TD
-    User([User]) -->|Upload PDF| API[FastAPI\nPOST /upload]
-    API -->|save file| FS[PDF Storage\n./storage/pdfs/]
-    API -->|create record pending| DB[(SQLite\npapers.db)]
-    API -->|enqueue| BG[Background Task]
+    User(["👤 User"])
 
-    BG --> EXT[Text Extractor\nPyMuPDF\nfirst 6 pages · 6 000 chars]
-    EXT -->|raw text| LLM[LLM API\nAnthropic · OpenAI-compatible]
-    LLM -->|JSON: title, authors, topics,\nai_summary, contributions,\ncitations, methodology| BG
-    BG -->|write metadata done| DB
+    subgraph Frontend["🌐 Frontend · Browser (HTML · CSS · Vanilla JS)"]
+        F1["Upload PDF"]
+        F2["Browse · Filter · Search\nCard view  /  Table view"]
+        F3["Detail Modal\nAI Summary · Contributions · Citations"]
+        F4["View PDF inline"]
+    end
 
-    DB -->|REST JSON| FE[Browser Frontend\nHTML · CSS · Vanilla JS]
-    FE -->|poll every 3 s| DB
-    User -->|browse · filter · search| FE
-    User -->|View PDF| PDFEP[GET /api/papers/id/pdf]
-    PDFEP -->|FileResponse inline| FS
+    subgraph Backend["⚙️ Backend · FastAPI"]
+        subgraph API["REST API"]
+            E1["POST /api/papers/upload"]
+            E2["GET  /api/papers"]
+            E3["GET  /api/papers/{id}/pdf"]
+            E4["POST /api/papers/{id}/analyze"]
+        end
+
+        subgraph Agent["🧠 LLM Analysis Agent  (Background Task)"]
+            Perceive["① Perceive\nPyMuPDF · 25 pages · 60 000 chars"]
+            Decide["② Decide\nLLM API — Anthropic / OpenAI-compatible\noutputs structured JSON"]
+            Act["③ Act\nWrite metadata to DB · mark done"]
+            Perceive --> Decide --> Act
+        end
+
+        subgraph Storage["💾 Storage"]
+            DB[("SQLite  papers.db")]
+            FS["PDF Files  ./storage/pdfs/"]
+        end
+    end
+
+    User -->|"upload / browse / view"| Frontend
+
+    Frontend -->|"POST file"| E1
+    Frontend -->|"poll every 3 s"| E2
+    Frontend -->|"request PDF"| E3
+    Frontend -->|"retry"| E4
+
+    E1 -->|"save"| FS
+    E1 -->|"record: pending"| DB
+    E1 -->|"enqueue"| Agent
+    E4 -->|"enqueue"| Agent
+
+    Act -->|"record: done + metadata"| DB
+
+    E2 -->|"query"| DB
+    E3 -->|"serve"| FS
+
+    DB -->|"JSON"| Frontend
+    FS -->|"PDF"| Frontend
 ```
 
 **Key design decisions:**
