@@ -10,8 +10,9 @@ No chat interface. No cloud storage. Just upload and explore.
 
 ## 🎬 Demo
 
-> **[TODO: Add 2-minute demo video link here]**  
-> Record a screen capture showing: upload → analysis → card/table view → detail modal → View PDF. Upload to YouTube or Bilibili and paste the link.
+[![paperlibrary demo](https://img.youtube.com/vi/JcXT-RnJU4I/0.jpg)](https://youtu.be/JcXT-RnJU4I)
+
+▶ https://youtu.be/JcXT-RnJU4I
 
 ---
 
